@@ -11,7 +11,7 @@ interface Movement {
     //Returns true if unit is currently moveable
     boolean moveable();
     //Returns current speed
-    int currentSpeed();
+    double currentSpeed();
     //current movement type. For now, stored as an int.
     int movementType();
 }
@@ -26,40 +26,28 @@ interface Attackable {
     Status attackResult(Condition condition, Attack attack);
 }
 
-abstract class Stat {
-    String name;
-    double value;
-    double modifiedValue;
-
-    private void modify(double modifier) {
-        modifiedValue += modifier;
-    }
-
-    private double getModifiedValue() {
-        return modifiedValue;
-    }
-
-    private double getValue()  {
-        return value;
-    }
+interface Condition {
+    //returns a status object containing units current vital stats
+    abstract Status status();
+    //contains intial values
+    abstract void startingCondition();
+    //Returns true if the unit is alive
+    boolean alive();
 }
 
-
-abstract class Attack {
-    Stat attackRate;
-    Stat attackRange;
-    Stat attackDamage;
-    Stat armorPenetration;
-    Modifier modInflicted;
-}
 
 abstract class Status {
-    Stat health;
-    Stat speed;
-    Stat armor;
-    Stat range;
+    public Stat health;
+    public Stat speed;
+    public Stat armor;
+    public Stat range;
 
-
+    public Status (double mHealth, double mSpeed, double mArmor, double mRange) {
+        health = new Stat(mHealth);
+        speed = new Stat(mSpeed);
+        armor = new Stat(mArmor);
+        range = new Stat(mRange);
+    }
     //probably scrap this method.
     private ArrayList<Modifier> mods;
 
@@ -85,6 +73,37 @@ abstract class Status {
     }
 }
 
+class Stat {
+    String name;
+    private double value;
+    private double modifiedValue;
+
+    public Stat(double v) {
+        value = v;
+        modifiedValue = v;
+    }
+    private void modify(double modifier) {
+        modifiedValue += modifier;
+    }
+
+    public double getModifiedValue() {
+        return modifiedValue;
+    }
+
+    public double getValue()  {
+        return value;
+    }
+}
+
+
+abstract class Attack {
+    Stat attackRate;
+    Stat attackRange;
+    Stat attackDamage;
+    Stat armorPenetration;
+    Modifier modInflicted;
+}
+
 abstract class Modifier {
     String name;
     String description;
@@ -93,12 +112,5 @@ abstract class Modifier {
     double duration;
 }
 
-interface Condition {
-    //returns a status object containing units current vital stats
-    abstract Status status();
-    //contains intial values
-    abstract void startingCondition();
-    //Returns true if the unit is alive
-    boolean alive();
-}
+
 

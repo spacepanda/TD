@@ -5,28 +5,50 @@ import com.spacepanda.td.*;
  *
  * Building blocks of an enemy.
  */
-public abstract class Mob implements Movement, Stats, Condition {
+public abstract class Mob implements Movement, Condition {
+
+    Status mStatus;
+    Attack mAttack;
+
 
     //required methods to implement Movemement
 
-    //Returns true if the unit is alive & no status conditions have
-    //rendered movement impossible.
+    //Returns true if the unit has no status conditions that
+    //render movement impossible.
     public boolean moveable() {
-        if(alive()){
+        if(this.currentSpeed() > 0)
+            return true;
+        else
+            return false;
 
-        }
     }
-    abstract public int currentSpeed();
+    public double currentSpeed() {
+        return this.status().speed.getModifiedValue();
+    }
+
+    //must be implemented by each subtype
+    //currently 0 = ground, 1 = flying.
     abstract public int movementType();
 
-    //required methods to implement Stats
-    abstract public double range();
-    abstract public double speed();
-    abstract public Attack attackValue();
-    abstract public double armor();
+    //returns this units attack capabilities
+    public Attack attack() {
+        return mAttack;
+    }
 
     //required methods to implement Condition
-    abstract public Status status();
+
+    //return current status
+    public Status status() {
+        return mStatus;
+    }
+
+    //must be implemented by each subclass and contain starting stat values.
+    //initializes mStatus and mAttack
     abstract public void startingCondition();
-    abstract public boolean alive();
+    //returns true if this mob is alive
+    public boolean alive() {
+        if (this.status().health.getModifiedValue() > 0)
+            return true;
+        return false;
+    }
 }

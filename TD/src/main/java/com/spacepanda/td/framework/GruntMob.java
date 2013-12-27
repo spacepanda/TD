@@ -3,7 +3,8 @@ package com.spacepanda.td.framework;
 public class GruntMob extends Mob {
 
     public void startingCondition() {
-        mStatus = new Status()
+        mStatus = new Status(10, 5, 0, 0);
+
     }
 
     public int movementType() {

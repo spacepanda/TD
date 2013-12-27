@@ -35,8 +35,29 @@ interface Condition {
     boolean alive();
 }
 
+class Stat {
+    String name;
+    private double value;
+    private double modifiedValue;
 
-abstract class Status {
+    public Stat(double v) {
+        value = v;
+        modifiedValue = v;
+    }
+    private void modify(double modifier) {
+        modifiedValue += modifier;
+    }
+
+    public double getModifiedValue() {
+        return modifiedValue;
+    }
+
+    public double getValue()  {
+        return value;
+    }
+}
+
+class Status {
     public Stat health;
     public Stat speed;
     public Stat armor;
@@ -73,36 +94,23 @@ abstract class Status {
     }
 }
 
-class Stat {
-    String name;
-    private double value;
-    private double modifiedValue;
-
-    public Stat(double v) {
-        value = v;
-        modifiedValue = v;
-    }
-    private void modify(double modifier) {
-        modifiedValue += modifier;
-    }
-
-    public double getModifiedValue() {
-        return modifiedValue;
-    }
-
-    public double getValue()  {
-        return value;
-    }
-}
-
-
-abstract class Attack {
+class Attack {
     Stat attackRate;
     Stat attackRange;
     Stat attackDamage;
     Stat armorPenetration;
     Modifier modInflicted;
+
+    public Attack (double mAttackRate, double mAttackRange, double mAttackDamage, double mArmorPenetration, Modifier mod) {
+        attackRate = new Stat(mAttackRate);
+        attackRange = new Stat(mAttackRange);
+        attackDamage = new Stat(mAttackDamage);
+        armorPenetration = new Stat(mArmorPenetration);
+        modInflicted = mod;
+    }
 }
+
+
 
 abstract class Modifier {
     String name;
